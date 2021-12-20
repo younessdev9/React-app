@@ -1,0 +1,130 @@
+#!/bin/sh
+PASS=true
+
+
+################################################################
+#check for plain JS files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR |  egrep ".*\.(js|jsx)$")
+BABEL="babel.config.js"
+for FILE in $STAGED_FILES
+do
+    if [ $FILE != $BABEL ]; then
+        printf "\t\033[1;31mPlain JS:\033[0m $FILE\n"
+        PASS=false
+    fi
+done
+
+if ! $PASS; then
+  printf "\033[1;31mCOMMIT FAILED:\033[0m Your commit contains plain JS or JSX files. Please use typescript only.\n"
+  exit 1
+fi
+################################################################
+#done JS FILES
+################################################################
+
+
+
+
+
+################################################################
+#check typescript
+TSC="$(git rev-parse --show-toplevel)/node_modules/.bin/tsc --project $(git rev-parse --show-toplevel)"
+$TSC > /dev/null
+if [ $? -ne 0 ]; then
+    echo "$TSC"
+    printf "\033[1;31mCOMMIT FAILED:\033[0m Your commit has some typescript error please fix them.\n"
+    echo "\033[0;35mRUN THIS:\t\033[0mnpm run check"
+    exit 1
+fi
+################################################################
+#done TS
+################################################################
+
+
+
+
+################################################################
+#eslint
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR |  egrep ".*\.(ts|tsx)$")
+ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
+
+if [ ! -x "$ESLINT" ]; then
+  printf "\t\033[41mPlease install ESlint\033[0m (npm i --save-dev eslint)"
+  exit 1
+fi
+
+errors=""
+for FILE in $STAGED_FILES
+do
+    $ESLINT "$FILE" > /dev/null
+    
+    if [ $? -eq 0 ]; then
+        printf "\t\033[32mESLint Passed:\033[0m $FILE\n"
+    else
+        printf "\t\033[1;31mESLint Failed:\033[0m $FILE\n"
+        PASS=false
+        errors="${errors} ${FILE}"
+    fi
+done
+
+if ! $PASS; then
+    echo "==============="
+    printf "\033[1;31mCOMMIT FAILED: Please fix the ESLint errors in the following files:\n"
+    for value in $errors
+    do
+        printf "\t\033[0m$value\n"
+    done
+    echo "==============="
+    echo "\033[0;35mRUN THIS:\t\033[0mnpm run lint"
+    exit 1
+fi
+################################################################
+# Done es lint
+################################################################
+
+
+
+
+################################################################
+#prettier
+PRETTIER="$(git rev-parse --show-toplevel)/node_modules/.bin/prettier"
+if [ ! -x "$PRETTIER" ]; then
+  printf "\t\033[41mPlease install Prettier\033[0m (npm i --save-dev prettier)"
+  exit 1
+fi
+
+errors=""
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR |  egrep ".*\.(ts|tsx|json)$")
+for FILE in $STAGED_FILES
+do
+    $PRETTIER --check "$FILE" > /dev/null 2>&1
+    
+    if [ $? -eq 0 ]; then
+        printf "\t\033[32mPrettier Passed:\033[0m $FILE\033\n"
+    else
+        printf "\t\033[1;31mPerttier Failed:\033[0m $FILE\033[0m\n"
+        PASS=false
+        errors="${errors} ${FILE}"
+    fi
+done
+
+if ! $PASS; then
+    echo "==============="
+    printf "\033[1;31mCOMMIT FAILED: Please fix the Prettier errors in the following files:\n"
+    for value in $errors
+    do
+        printf "\t\033[0m$value\n"
+    done
+    echo "==============="
+    echo "\033[0;35mRUN THIS:\t\033[0mnpm run format"
+    exit 1
+fi
+################################################################
+#prettied
+################################################################
+
+
+
+
+printf "\033[1;4;36mALL CHECKS PASSED\033[0m\n"
+exit 0
