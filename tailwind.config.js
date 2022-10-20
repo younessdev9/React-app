@@ -7,9 +7,13 @@ module.exports = {
     theme: {
         colors: {
             ...colors,
-            lightBlue: {
+            blue: {
                 300: "#F4F8FA",
+                1000: "#1B31A8",
             },
+        },
+        fontFamily: {
+            work: ["Work Sans", "sans-serif"],
         },
         extend: {},
     },

@@ -6,8 +6,6 @@ type LayoutProps = {
 
 export default function Layout({ children }: LayoutProps) {
     return (
-        <div className="w-full h-full flex justify-center items-center bg-lightBlue-300">
-            {children}
-        </div>
+        <div className="w-full h-full flex justify-center items-center bg-blue-300">{children}</div>
     )
 }
