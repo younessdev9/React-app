@@ -1,11 +1,13 @@
 import React from "react"
+import Layout from "@components/Layout"
 import ReactDOM from "react-dom"
 import "./index.css"
+import HomePage from "@screens/home"
 
 const App = () => (
-    <div className="w-full h-full flex justify-center items-center">
-        <h1>Hello There!</h1>
-    </div>
+    <Layout>
+        <HomePage />
+    </Layout>
 )
 
 ReactDOM.render(<App />, document.getElementById("root"))
