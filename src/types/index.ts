@@ -8,3 +8,7 @@ export type ApiResponse = {
     max_tenure: string
     image: string
 }
+export type FormValues = {
+    loanAmount: number
+    monthsCount: number
+}
