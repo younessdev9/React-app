@@ -68,6 +68,18 @@ export default function HomePage() {
                         </div>
                     </div>
                 </div>
+                <div className="rounded-lg border-[1px] mt-6">
+                    <div className="h-[78px] flex justify-around items-center">
+                        <p className="text-xl">Monthly amount</p>
+                        <p className="text-[32px] font-medium text-blue-800 ">$354</p>
+                    </div>
+                    <div className="h-20 bg-blue-300 px-8 py-6">
+                        <p className="text-xs">
+                            You&apos;re planning 12 monthly deposits to reach your $25,000 goal by
+                            July 2022. The total amount loaned will be $26,300
+                        </p>
+                    </div>
+                </div>
             </div>
         </form>
     )
