@@ -23,7 +23,7 @@ export default function HomePage() {
             <p className="text-xl colo text-blue-1000 text-center mb-6">
                 Le&apos;s plan your <span className="font-medium">loan.</span>
             </p>
-            <div className="w-[560px] bg-white px-10 py-4 rounded-lg">
+            <div className="w-[560px] bg-white px-10 py-4 pb-10 rounded-lg">
                 <div className="flex items-center justify-center gap-3">
                     {data.map((product) => (
                         <img
@@ -79,6 +79,11 @@ export default function HomePage() {
                             July 2022. The total amount loaned will be $26,300
                         </p>
                     </div>
+                </div>
+                <div className="flex justify-center">
+                    <button className="w-[320px] py-[18px] rounded-[32px] bg-blue-1000 text-white font-semibold mt-8">
+                        Apply Now
+                    </button>
                 </div>
             </div>
         </form>
