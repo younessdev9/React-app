@@ -11,6 +11,9 @@ module.exports = {
                 300: "#F4F8FA",
                 1000: "#1B31A8",
             },
+            darkBlue: {
+                500: "#1E2A32",
+            },
         },
         fontFamily: {
             work: ["Work Sans", "sans-serif"],
