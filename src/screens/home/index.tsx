@@ -58,11 +58,11 @@ export default function HomePage() {
     )
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className="w-11/12 md:w-auto">
             <p className="text-xl colo text-blue-1000 text-center mb-6">
                 Le&apos;s plan your <span className="font-medium">loan.</span>
             </p>
-            <div className="w-[560px] bg-white px-10 py-4 pb-10 rounded-lg">
+            <div className="md:w-[560px] bg-white px-10 py-4 pb-10 rounded-lg">
                 <div className="flex items-center justify-center gap-3">
                     {data.map((product) => (
                         <div key={product.id} className="flex flex-col">
@@ -87,8 +87,8 @@ export default function HomePage() {
                         </div>
                     ))}
                 </div>
-                <div className="flex gap-4 mt-6">
-                    <div className="w-[272px]">
+                <div className="flex md:flex-nowrap flex-wrap gap-4 mt-6">
+                    <div className="md:w-[272px] flex-auto">
                         <label
                             htmlFor="loan-amount"
                             className="leading-normal text-sm text-darkBlue-500">
@@ -100,7 +100,6 @@ export default function HomePage() {
                                 !!errors.loanAmount && "border-red-500"
                             )}>
                             <DollarIcon />
-                            {/* Used Controller so I can control the value */}
                             <Controller
                                 control={control}
                                 name="loanAmount"
@@ -135,7 +134,7 @@ export default function HomePage() {
                             {errors.loanAmount && errors.loanAmount.message}
                         </span>
                     </div>
-                    <div className="w-[192px]">
+                    <div className="md:w-[192px] w-full mt-4 md:mt-0">
                         <label
                             htmlFor="number-of-months"
                             className="leading-normal mb-1 text-sm text-darkBlue-500">
@@ -193,14 +192,14 @@ export default function HomePage() {
                 <div className="rounded-lg border-[1px] mt-6">
                     <div className="h-[78px] flex justify-around items-center">
                         <p className="text-xl">Monthly amount</p>
-                        <p className="text-[32px] font-medium text-blue-800 ">
+                        <p className="md:text-[32px] text-lg font-medium text-blue-800">
                             $
                             {!isNaN(getTotalInstallment) &&
                                 isFinite(getTotalInstallment) &&
                                 getTotalInstallment}
                         </p>
                     </div>
-                    <div className="h-20 bg-blue-300 px-8 py-6">
+                    <div className=" bg-blue-300 px-8 py-6">
                         <p className="text-xs">
                             You&apos;re planning {watch("monthsCount")}{" "}
                             <span className="font-medium"> monthly deposits</span> to reach your
