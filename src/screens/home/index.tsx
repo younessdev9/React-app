@@ -4,6 +4,10 @@ import { RightArrow, LeftArrow, DollarIcon } from "../../assets/icons"
 
 import { ApiResponse, FormValues } from "src/types"
 import { cx } from "../../utils/cx"
+import { getTargetMonth } from "../../utils/getTargetMonth"
+
+// I've put everything is one file because the app is small but usually when working on large apps
+// you'd decouple your components create and create reusable kits
 
 export default function HomePage() {
     const {
@@ -11,6 +15,8 @@ export default function HomePage() {
         control,
         reset,
         formState: { errors },
+        watch,
+        getValues,
     } = useForm<FormValues>()
     const [data, setData] = useState<ApiResponse[]>([])
     const [activeLoan, setActiveLoan] = useState<ApiResponse>()
@@ -32,10 +38,22 @@ export default function HomePage() {
     useEffect(() => {
         reset()
     }, [activeLoan])
+
+    // Validation is triggered when user click Apply now button But
     const onSubmit = (values: FormValues) => {
         // login submitted data
         console.log(values)
     }
+    // total amount = loan amount + (loan amount * product interest)
+    const getTotalAmount = () => {
+        const loanAmount = Number(getValues("loanAmount"))
+        return loanAmount + loanAmount * Number(activeLoan?.interest)
+    }
+    // monthly installment = total amount / # months
+
+    const getTotalInstallment = Math.floor(
+        Number(watch("loanAmount")) / Number(watch("monthsCount"))
+    )
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -89,13 +107,13 @@ export default function HomePage() {
                                     max: {
                                         value: Number(activeLoan?.max_amount),
                                         message:
-                                            "max amount for this loan is " +
+                                            "maximum amount allowed is: " +
                                             Number(activeLoan?.max_amount),
                                     },
                                     min: {
                                         value: Number(activeLoan?.min_amount),
                                         message:
-                                            "minimum amount for this loan is " +
+                                            "minimum amount allowed is: " +
                                             Number(activeLoan?.min_amount),
                                     },
                                 }}
@@ -106,7 +124,7 @@ export default function HomePage() {
                                         value={field.value}
                                         type="number"
                                         min={0}
-                                        onChange={field.onChange}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
                                     />
                                 )}
                             />
@@ -125,16 +143,17 @@ export default function HomePage() {
                         <Controller
                             control={control}
                             name="monthsCount"
+                            defaultValue={0}
                             rules={{
                                 max: {
                                     value: Number(activeLoan?.max_tenure),
                                     message:
-                                        "max months allowed is: " + Number(activeLoan?.max_tenure),
+                                        "maximum months allowed: " + Number(activeLoan?.max_tenure),
                                 },
                                 min: {
                                     value: Number(activeLoan?.min_tenure),
                                     message:
-                                        "minimum months allowed " + Number(activeLoan?.min_tenure),
+                                        "minimum months allowed: " + Number(activeLoan?.min_tenure),
                                 },
                             }}
                             render={({ field }) => (
@@ -151,7 +170,7 @@ export default function HomePage() {
                                     <input
                                         id="number-of-months"
                                         className="outline-none ml-3 w-full text-center"
-                                        value={field.value || ""}
+                                        value={field.value}
                                         type="number"
                                         min={0}
                                         onChange={field.onChange}
@@ -172,12 +191,21 @@ export default function HomePage() {
                 <div className="rounded-lg border-[1px] mt-6">
                     <div className="h-[78px] flex justify-around items-center">
                         <p className="text-xl">Monthly amount</p>
-                        <p className="text-[32px] font-medium text-blue-800 ">$354</p>
+                        <p className="text-[32px] font-medium text-blue-800 ">
+                            $
+                            {!isNaN(getTotalInstallment) &&
+                                isFinite(getTotalInstallment) &&
+                                getTotalInstallment}
+                        </p>
                     </div>
                     <div className="h-20 bg-blue-300 px-8 py-6">
                         <p className="text-xs">
-                            You&apos;re planning 12 monthly deposits to reach your $25,000 goal by
-                            July 2022. The total amount loaned will be $26,300
+                            You&apos;re planning {watch("monthsCount")}{" "}
+                            <span className="font-medium"> monthly deposits</span> to reach your
+                            <span className="font-medium"> ${watch("loanAmount")} </span>goal by{" "}
+                            {watch("monthsCount") && getTargetMonth(Number(watch("monthsCount")))}.
+                            The total amount loaned will be $
+                            {!isNaN(getTotalAmount()) && getTotalAmount()}
                         </p>
                     </div>
                 </div>
