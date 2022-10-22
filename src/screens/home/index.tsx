@@ -38,7 +38,7 @@ export default function HomePage() {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <p className="text-xl colo text-blue-1000 text-center mb-6">
                 Le&apos;s plan your <span className="font-medium">loan.</span>
             </p>
@@ -104,9 +104,9 @@ export default function HomePage() {
                                         id="loan-amount"
                                         className="flex-1 outline-none ml-3"
                                         value={field.value}
-                                        onChange={(e) =>
-                                            !isNaN(Number(e.target.value)) && field.onChange(e)
-                                        }
+                                        type="number"
+                                        min={0}
+                                        onChange={field.onChange}
                                     />
                                 )}
                             />
@@ -125,7 +125,6 @@ export default function HomePage() {
                         <Controller
                             control={control}
                             name="monthsCount"
-                            defaultValue={0}
                             rules={{
                                 max: {
                                     value: Number(activeLoan?.max_tenure),
@@ -145,27 +144,20 @@ export default function HomePage() {
                                         !!errors.monthsCount && "border-red-500"
                                     )}>
                                     <LeftArrow
-                                        onClick={() => field.onChange(field.value - 1)}
+                                        onClick={() => field.onChange(Number(field.value) - 1)}
                                         width="30px"
                                         className="cursor-pointer"
                                     />
                                     <input
                                         id="number-of-months"
                                         className="outline-none ml-3 w-full text-center"
-                                        value={field.value}
-                                        onChange={(e) =>
-                                            isNaN(Number(e.target.value)) && field.onChange(e)
-                                        }
-                                        onKeyDown={(e) => {
-                                            if (e.key === "ArrowUp") {
-                                                field.onChange(field.value + 1)
-                                            } else if (e.key === "ArrowDown") {
-                                                field.onChange(field.value + 1)
-                                            }
-                                        }}
+                                        value={field.value || ""}
+                                        type="number"
+                                        min={0}
+                                        onChange={field.onChange}
                                     />
                                     <RightArrow
-                                        onClick={() => field.onChange(field.value + 1)}
+                                        onClick={() => field.onChange(Number(field.value) + 1)}
                                         width="30px"
                                         className="cursor-pointer"
                                     />
