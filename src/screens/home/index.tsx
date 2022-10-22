@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
+import { NumericFormat } from "react-number-format"
+
 import { RightArrow, LeftArrow, DollarIcon } from "../../assets/icons"
 
 import { ApiResponse, FormValues } from "src/types"
@@ -118,13 +120,13 @@ export default function HomePage() {
                                     },
                                 }}
                                 render={({ field }) => (
-                                    <input
-                                        id="loan-amount"
-                                        className="flex-1 outline-none ml-3"
+                                    <NumericFormat
                                         value={field.value}
-                                        type="number"
-                                        min={0}
-                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                        className="flex-1 outline-none ml-3"
+                                        onChange={field.onChange}
+                                        allowLeadingZeros
+                                        thousandSeparator=","
+                                        decimalScale={2}
                                     />
                                 )}
                             />
