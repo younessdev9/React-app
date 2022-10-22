@@ -48,7 +48,8 @@ export default function HomePage() {
     }
     // total amount = loan amount + (loan amount * product interest)
     const getTotalAmount = () => {
-        const loanAmount = Number(getValues("loanAmount"))
+        const parseValue = parseFloat(String(getValues("loanAmount")).split(",").join(""))
+        const loanAmount = parseValue
         return loanAmount + loanAmount * Number(activeLoan?.interest)
     }
     // monthly installment = total amount / # months
